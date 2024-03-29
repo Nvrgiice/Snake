@@ -15,17 +15,34 @@ w, h = fenetre.winfo_screenwidth(), fenetre.winfo_screenheight()
 fenetre.geometry("%dx%d" % (w, h))
 
 # Récupération d'une image pour changer le logo par défaut
-fenetre.iconbitmap("logo.ico1.png")
+#fenetre.iconbitmap("logo.ico1.png")
 
 # Modification de la couleur du fond de la fenêtre
-fenetre.config(background='#9DCD5A')
+fenetre.config(background='#B0E1B0')
 
 # Titre (Label)
-titre = Label(fenetre, text = "Snake Game", font="Calibri, 30", fg='pink', bg='#9DCD5A')
+image_snake = PhotoImage(file="snake_image.png")  # Assurez-vous d'avoir un fichier image nommé "snake_image.png" dans le même répertoire que votre script
+# Affichage de l'image
+label_image = Label(fenetre, image=image_snake, bg='#B0E1B0')
+label_image.pack()
 # Affichage du titre
-#titre.pack(side=BOTTOM) # Pour positionner en bas
-#titre.pack(side=RIGHT) # Pour positionner à droite
-titre.pack(expand=YES)
+
+
+#bouton play 
+cadre_bouton_play = Canvas(fenetre, width=150, height=50, bg="#C51C3D", highlightthickness=2, highlightbackground="black", bd=0, relief="flat", borderwidth=0, highlightcolor="black")
+cadre_bouton_play.place(relx=0.5, rely=0.75, anchor=S)
+cadre_bouton_play.create_text(75, 25, text="PLAY", font=("Comic Sans MS", 20, "bold"), fill="white")
+
+# Création du cadre pour le bouton "règles du jeu"
+cadre_bouton_regles = Canvas(fenetre, width=200, height=50, bg="#C51C3D", highlightthickness=2, highlightbackground="black", bd=0, relief="flat", borderwidth=0, highlightcolor="black")
+cadre_bouton_regles.place(relx=0.5, rely=0.85, anchor=S)
+
+# Création du texte "Règles du jeu" dans le cadre
+cadre_bouton_regles.create_text(100, 25, text="REGLES DU JEU", font=("Comic Sans MS", 16, "bold"), fill="white")
+
+# Associer la fonction ouvrir_regles() au clic sur le cadre "Règles du jeu"
+cadre_bouton_regles.bind("<Button-1>", lambda event: ouvrir_regles())
+
 
 # Sous Titre (Label)
 #sous_titre = Label(fenetre, text = "Nouvel élément", font="Calibri, 20", fg='pink', bg='#3396ff')
@@ -49,4 +66,3 @@ bouton = Button(cadre, text = "Calculer", command = calculer)
 bouton.pack()'''
 # Démarrage de la boucle Tkinter (à placer à la fin !!!)
 fenetre.mainloop()
-
