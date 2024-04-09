@@ -2,6 +2,7 @@ from tkinter import *
 from random import randint
 import math 
 
+
 # Création d’une "fenêtre"
 fenetre = Tk()
 fenetre.title("Snake")
@@ -10,20 +11,17 @@ w, h = fenetre.winfo_screenwidth(), fenetre.winfo_screenheight()
 fenetre.geometry("%dx%d" % (w, h))
 fenetre.config(background='#288352')
 
-#pour pleine écran
-#fenetre.attributes('-fullscreen', 2)
-#fenetre.bind('<Escape>',lambda e: fenetre.destroy())
 
 #variable selon taille de écran
-PGCD = math.gcd(fenetre.winfo_screenwidth() , fenetre.winfo_screenheight())
+PGCD = math.gcd(fenetre.winfo_screenwidth() , fenetre.winfo_screenheight())   
 C = int(PGCD/3)    #côté de carreau
+reste_longeur = fenetre.winfo_screenwidth()%C
 colonne = int(fenetre.winfo_screenwidth()//C)
 ligne = int((fenetre.winfo_screenheight()-5*C)//C)
 
 # Créaction Caneva
 can = Canvas(fenetre,bg='yellow',height=C*ligne ,width=fenetre.winfo_screenwidth())
 can.pack(side=BOTTOM)
-#can.place()
 
 
 def creation_terrain():
@@ -48,7 +46,6 @@ def creation_terrain():
         x_début += C
         x_fin += C
 
-creation_terrain()
 
 
 #génération de pomme au hazard
@@ -99,8 +96,6 @@ def mouvement():
         Serpent[i][1]=Serpent[i-1][1]    #transmet l'aordonnée au cercle avant
         can.create_oval(Serpent[i][0]-3*ecb, Serpent[i][1]-3*ecb, Serpent[i][0]+3*ecb, Serpent[i][1]+3*ecb,outline='green', fill='black',) 
         i -= 1
-    
-
 
     if direction  == 'gauche':
         Serpent[0][0]  = Serpent[0][0] - dx
@@ -126,9 +121,17 @@ def mouvement():
 
 
     if flag != 0:
-        fenetre.after(200, mouvement)   # temps 
-    
-    #can.create_image(x_pomme, y_pomme, image='pomme.png')
+        fenetre.after(150, mouvement)   # temps 
+
+
+
+    #return distance and point
+
+    # torp lourd
+    #monImage = PhotoImage(file="pomme.png").subsample(10)
+    #images.append(monImage)
+    #can.create_image(1+x_pomme - C//2, y_pomme, image=monImage)
+    #================
 
 def gauche(event):
     global direction
@@ -157,35 +160,42 @@ def test_pomme():
             x_pomme, y_pomme = pomme()
             Serpent.append([0,0]) #On joute un nouveau point au serpent
 
-"""def test_que(i):
-    a = len(Serpent)-1
-    while a > 0 :
-        if Serpent[i][0] == Serpent[a][0] and Serpent[i][1] == Serpent[a][1]:
-            can.delete("all")    
-    a-=1"""
+    #return point
+
+
+
+#def test_que(i):
+#    a = len(Serpent)-1
+#    while a > 0 :
+#        if Serpent[i][0] == Serpent[a][0] and Serpent[i][1] == Serpent[a][1]:
+#            can.delete("all")    
+#    a-=1
+
 
 
 
 flag = 1
 dx = C
 dy = C
-direction = 'haut'
+direction = 'bas'
 fenetre.bind('<d>', droite)
 fenetre.bind('<q>', gauche)
 fenetre.bind('<z>' , haut)
 fenetre.bind('<s>', bas)
-#==========================================================================================
 
 x=3*C + C//2
 y=3*C + C//2
 Serpent=[[x,y],[x,y],[x,y],[x,y]]
 
-mouvement()
 
+def play():
+    creation_terrain()
+    global images
+    global x_pomme, y_pomme
+    x_pomme, y_pomme = pomme()
+    mouvement()
 
-
-
+play()
 
 fenetre.mainloop()
 #pygame
-
