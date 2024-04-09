@@ -1,0 +1,44 @@
+import time
+#from programme_jeu import score  # on récupère le score 
+
+def donnees():
+    pseudo = input("Quelle est votre pseudo : ")  # Créer le pseudo du joueur
+    score=10
+    try:
+        with open("scores.txt", "a") as fichier:  # Utilisation du mode "a" pour ajouter des données à la fin du fichier
+            fichier.write(f"{pseudo} / {score}")  # Écrire le pseudo du joueur et son score dans le fichier
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de l'enregistrement du pseudo : {e}")
+
+def chronometre():
+    debut = time.time()
+    input("Appuyez sur Entrée pour démarrer le jeu...")
+    input("Appuyez sur Entrée pour arrêter le jeu...")
+    fin = time.time()
+    duree_jeu = fin - debut
+    try:
+        with open("scores.txt", "a") as fichier:
+            fichier.write(f" / {duree_jeu} secondes\n")
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de l'enregistrement de la durée de jeu : {e}")
+
+def classement():
+    try:
+        with open("scores.txt", "r") as fichier:  # Lire les données du fichier et les stocker dans une liste
+            scores = [line.strip() for line in fichier.readlines()]
+            # Afficher le score du joueur actuel
+            tailleFic = len(scores)
+            print("votre score est : ",scores[tailleFic-1])
+            # split(" / ")
+            print("Classement des meilleurs scores :")
+            # trier les scores avant de les affichier
+            for i, score_info in enumerate(scores[:5], start=1):
+                print(f"{i}. Joueur : {score_info}")
+    except FileNotFoundError:
+        print("Aucun score enregistré.")
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de la lecture du fichier : {e}")
+
+donnees()
+chronometre()
+classement()
