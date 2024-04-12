@@ -1,12 +1,14 @@
 import time
 #from programme_jeu import score  # on récupère le score 
+#from programme_jeu import pseudo 
 #gerer distance
+
 
 def donnees():
     pseudo = input("Quelle est votre pseudo : ")  # Créer le pseudo du joueur
     score=15
     try:
-        with open("scores.txt", "a") as fichier:  # Utilisation du mode "a" pour ajouter des données à la fin du fichier
+        with open("score.txt", "a") as fichier:  # Utilisation du mode "a" pour ajouter des données à la fin du fichier
             fichier.write(f"{pseudo} / {score}")  # Écrire le pseudo du joueur et son score dans le fichier
     except Exception as e: #gérer les exceptions
         print(f"Une erreur s'est produite lors de l'enregistrement du pseudo : {e}")
@@ -16,78 +18,45 @@ def chronometre():
     input("Appuyez sur Entrée pour démarrer le jeu...")
     input("Appuyez sur Entrée pour arrêter le jeu...")
     fin = time.time()
-    duree_jeu = fin - debut
+    duree_jeu = round(fin - debut,3)
+    # Voir comment "réduire" le nombre de chiffres après la virgule
     try:
-        with open("scores.txt", "a") as fichier:
-            fichier.write(f" / {duree_jeu} secondes\n")
+        with open("score.txt", "a") as fichier:
+            fichier.write(f" / {duree_jeu}\n")
     except Exception as e:
         print(f"Une erreur s'est produite lors de l'enregistrement de la durée de jeu : {e}")
 
-'''
-def classement():
-    try:
-        with open("scores.txt", "r") as fichier:  # Lire les données du fichier et les stocker dans une liste
-            
-            scores = [line.strip() for line in fichier.readlines()]
-            print(scores)
-            # Afficher le score du joueur actuel
-            tailleFic = len(scores)
-            print("votre score est de ",scores[tailleFic-1])
-            # split(" / ")
-            
-            # Afficher le score du joueur actuel
-        with open("scores.txt", "r") as sc:
-            sc.readline()
-            for ligne in sc:
-                tailleFic = len(scores)
-                donnees = ligne.strip().split("/")
-                record = int(donnees[1])  # Récupérer le score du joueur
-                print("Votre score est de : ", record)  # Afficher le score
-                if int(record) < 5: 
-                    print("Continuez à vous entraîner ! Chaque partie est une opportunité d'améliorer votre performance.")
-                elif int(record) > 30 :
-                    print("Félicitations ! Vous avez réalisé un score exceptionnel !")
-                else:
-                    print("Continuez sur cette lancée !")
-            
-
-            #print(fichier.read())
-            print("Classement des meilleurs scores :")
-            # trier les scores avant de les affichier
-            scores.sort(key=lambda x: int(x.split("/")[1]), reverse=True)
-            for i, score_info in enumerate(scores[:5], start=1):
-                print(f"{i}. Joueur : {score_info}")
-    except FileNotFoundError:
-        print("Aucun score enregistré.")
-    except Exception as e:
-        print(f"Une erreur s'est produite lors de la lecture du fichier : {e}")
-
-'''
 
 def classement():
     try:
         scores = []  # Tableau pour stocker les scores
 
-        with open("scores.txt", "r") as sc:
+        with open("score.txt", "r") as sc:
             for ligne in sc:
-                donnees = ligne.strip().split("/")
+                donnees = ligne.strip().split(" / ")
+                
+            
+                pseudo = donnees[0].strip()  # Récupère le pseudo du joueur
+                score = int(donnees[1].strip())  # Récupère le score du joueur
+                temps = round(float(donnees[2].strip()),3)  # Récupère le temps du joueur
+                scores.append((pseudo, score, temps))  # Ajoute le pseudo/score/temps au tableau
+        # Récupère les données du dernier joueur dans le fichier
+        dernier_score = scores[-1][1]
+        pseudo_dernier = scores[-1][0]
+        dernier_temps = scores[-1][2]
 
-                pseudo = donnees[0]  # Récupère le pseudo du joueur
-                record = donnees[1]  # Récupère le score du joueur
-                scores.append((pseudo, int(record))) # Ajoute le pseudo/score au tableau
+        # Trie d'abord par score, puis par temps en cas d'égalité de score
+        scores.sort(key=lambda x: (x[1], x[2]), reverse=True)
 
         # Affiche le classement des meilleurs scores
         print("Classement des meilleurs scores :")
-        scores.sort(key=lambda x: x[1], reverse=True) 
-        for i, (pseudo, score) in enumerate(scores[:5], start=1): # Affiche les cinq meilleurs scores avec leur pseudo
-            print(f"{i}. Joueur : {pseudo} - Score : {score}")
+        for i, (pseudo, score, temps) in enumerate(scores[:5], start=1):  # Affiche les cinq meilleurs scores avec leur pseudo et temps
+            print(f"{i}. Joueur : {pseudo} - Score : {score} - Temps : {temps} secondes")
 
-        # Récupère le score du dernier joueur dans le fichier et afficher
-        dernier_score = scores[-1][1]
-        pseudo_dernier = scores[-1][0]
-        print(f"Votre score, {pseudo_dernier}, est de : {dernier_score}")
+        #Afficher le pseudo le score et le temps du dernier joueur
+        print(f"Votre score, {pseudo_dernier}, est de : {dernier_score} avec un temps de {dernier_temps} secondes")
 
-        # Affiche un message en fonction du score du joueur 
+        # Affiche un message en fonction du score du joueur
         if dernier_score < 5: 
             print("Continuez à vous entraîner ! Chaque partie est une opportunité d'améliorer votre performance.")
         elif dernier_score > 30:
@@ -96,11 +65,11 @@ def classement():
             print("Continuez sur cette lancée !")
     
     except FileNotFoundError:
-        print("Aucun score enregistré.")# Si le fichier n'existe pas, affiche un message d'erreur
+        print("Aucun score enregistré.")
     except Exception as e:
         print(f"Une erreur s'est produite lors de la lecture du fichier : {e}")
 
-#appel des fonctions pour les éxécuter 
+# Appel des fonctions pour les exécuter
 donnees()
 chronometre()
 classement()
