@@ -275,6 +275,5 @@ def play():
 
     return score_b, temps_b, distance_b
 
-score_b, temps_b, distance_b = play()
+play()
 
-print(score_b, temps_b, distance_b)
